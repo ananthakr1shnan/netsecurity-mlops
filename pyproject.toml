@@ -11,6 +11,7 @@ dependencies = [
   "numpy",
   "pymongo[srv]==4.13.1",
   "certifi",
+  "scikit-learn",
 ]
 requires-python = ">= 3.10"
 description="NETWORK SECURITY PROJECT"
