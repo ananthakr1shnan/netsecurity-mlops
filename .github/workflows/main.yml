@@ -45,6 +45,35 @@ jobs:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
           RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
         run: |
-          curl -X POST "https://api.render.com/deploy/srv-${RENDER_SERVICE_ID}" \
+          echo "Starting deployment to Render..."
+        
+          # Make the deployment request with proper error handling
+          response=$(curl -s -w "%{http_code}" -X POST \
+            "https://api.render.com/v1/services/${RENDER_SERVICE_ID}/deploys" \
             -H "Accept: application/json" \
-            -H "Authorization: Bearer ${RENDER_API_KEY}"
+            -H "Authorization: Bearer ${RENDER_API_KEY}" \
+            -H "Content-Type: application/json" \
+            -d '{}')
+        
+          # Extract HTTP status code (last 3 characters)
+          http_code="${response: -3}"
+          response_body="${response%???}"
+        
+          echo "HTTP Status Code: $http_code"
+          echo "Response Body: $response_body"
+        
+          # Check if deployment was successful
+          if [ "$http_code" -eq 201 ] || [ "$http_code" -eq 200 ]; then
+            echo "✅ Deployment triggered successfully!"
+            
+            # Extract deploy ID from response for tracking
+            deploy_id=$(echo "$response_body" | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4)
+            if [ -n "$deploy_id" ]; then
+              echo "Deploy ID: $deploy_id"
+              echo "You can track the deployment at: https://dashboard.render.com/service/${RENDER_SERVICE_ID}"
+            fi
+          else
+            echo "❌ Deployment failed with HTTP status code: $http_code"
+            echo "Response: $response_body"
+            exit 1
+          fi
