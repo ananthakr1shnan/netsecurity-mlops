@@ -1,0 +1,46 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual environment
+venv/
+.env
+*.env
+
+# ML artifacts and outputs
+Artifacts/
+output/
+prediction_output/
+logs/
+checkpoints/
+*.pkl
+*.joblib
+*.h5
+*.pt
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Jupyter notebooks (optional)
+*.ipynb
+
+# Git files
+.git/
+.gitignore
+
+# Python egg info
+*.egg-info/
+dist/
+build/
+
+# Docker related
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Editor settings
+.vscode/
+.idea/
+*.swp

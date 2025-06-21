@@ -1,10 +1,18 @@
 [build-system]
-requires=["setuptools >= 77.0.3"]
-build-backend="setuptools.build_meta"
+requires = ["setuptools >= 77.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [project]
-name = "NET-SEC"
+name = "net-sec"
 version = "0.0.1"
+description = "Network Security Project"
+readme = "README.md"
+requires-python = ">=3.10"
+
+authors = [
+  { name = "Ananthakrishnan K", email = "ananthakrishnan073@gmail.com" }
+]
+
 dependencies = [
   "python-dotenv",
   "pandas",
@@ -13,19 +21,13 @@ dependencies = [
   "certifi",
   "scikit-learn",
   "dill",
-  "pyaml", 
+  "pyyaml",
   "mlflow==2.3.2",
   "dagshub",
   "fastapi",
   "uvicorn",
-  "python-multipart",
+  "python-multipart"
 ]
-requires-python = ">= 3.10"
-description="NETWORK SECURITY PROJECT"
-authors = [
-  { name = "Ananthakrishnan K", email = "ananthakrishnan073@gmail.com" }
-]
-readme="README.md"
 
 [tool.setuptools]
 package-dir = {"" = "networksecurity"}
