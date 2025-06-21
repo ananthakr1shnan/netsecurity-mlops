@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Security ML Service</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #2d1b69 100%);
+            color: white;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Animated background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        .network-grid {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 170, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 170, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .floating-nodes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .node {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #00ffaa;
+            border-radius: 50%;
+            box-shadow: 0 0 20px #00ffaa;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .node:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+        .node:nth-child(2) { top: 40%; left: 80%; animation-delay: 0.5s; }
+        .node:nth-child(3) { top: 70%; left: 30%; animation-delay: 1s; }
+        .node:nth-child(4) { top: 60%; left: 70%; animation-delay: 1.5s; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+
+        /* Header */
+        header {
+            padding: 20px 0;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(0, 255, 170, 0.2);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo::before {
+            content: "🛡️";
+            font-size: 28px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+
+        .nav-links a:hover {
+            background: rgba(0, 255, 170, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 120px 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #00ffaa, #00d4ff, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px rgba(0, 255, 170, 0.3)); }
+            to { filter: drop-shadow(0 0 40px rgba(0, 255, 170, 0.6)); }
+        }
+
+        .hero .subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #00ffaa;
+            font-weight: 600;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 50px;
+            opacity: 0.9;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 255, 170, 0.1);
+            padding: 8px 16px;
+            border-radius: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(0, 255, 170, 0.3);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #00ffaa;
+            border-radius: 50%;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        /* Action Cards */
+        .actions {
+            padding: 80px 0;
+        }
+
+        .actions h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            color: #00ffaa;
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .action-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 170, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 170, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .action-card:hover::before {
+            left: 100%;
+        }
+
+        .action-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 40px rgba(0, 255, 170, 0.2);
+            border-color: rgba(0, 255, 170, 0.4);
+        }
+
+        .action-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .action-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #00ffaa;
+        }
+
+        .action-card p {
+            margin-bottom: 25px;
+            opacity: 0.8;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(45deg, #00ffaa, #00d4ff);
+            color: #0f0f23;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 255, 170, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #00ffaa;
+            border: 2px solid #00ffaa;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 255, 170, 0.1);
+            color: white;
+        }
+
+        /* API Endpoints */
+        .api-section {
+            padding: 80px 0;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .api-section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            color: #00ffaa;
+        }
+
+        .endpoint-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            border-left: 4px solid #00ffaa;
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .method-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .method-get { background: #00ffaa; color: #0f0f23; }
+        .method-post { background: #ff6b6b; color: white; }
+
+        .endpoint-path {
+            font-family: 'Monaco', monospace;
+            font-size: 1.2rem;
+            color: #00d4ff;
+        }
+
+        /* Upload Section */
+        .upload-section {
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .upload-area {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 60px 40px;
+            border: 2px dashed rgba(0, 255, 170, 0.3);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.02);
+            transition: all 0.3s ease;
+        }
+
+        .upload-area:hover {
+            border-color: rgba(0, 255, 170, 0.6);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-label {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(45deg, #00ffaa, #00d4ff);
+            color: #0f0f23;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .file-label:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 255, 170, 0.4);
+        }
+
+        /* Footer */
+        footer {
+            padding: 50px 0;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid rgba(0, 255, 170, 0.2);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .action-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero {
+                padding: 80px 0;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(0, 255, 170, 0.3);
+            border-radius: 50%;
+            border-top-color: #00ffaa;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation">
+        <div class="network-grid"></div>
+        <div class="floating-nodes">
+            <div class="node"></div>
+            <div class="node"></div>
+            <div class="node"></div>
+            <div class="node"></div>
+        </div>
+    </div>
+
+    <header>
+        <nav class="container">
+            <div class="logo">Network Security ML</div>
+            <div class="nav-links">
+                <a href="#services">Services</a>
+                <a href="#api">API</a>
+                <a href="/docs">Documentation</a>
+                <a href="#upload">Upload</a>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="status-indicator">
+                <div class="status-dot"></div>
+                <span>System Online</span>
+            </div>
+            <h1>Network Security Threat Prediction from Phishing Data</h1>
+            <p class="subtitle">AI-Powered Threat Detection & Analysis</p>
+            <p>
+    This interface is part of a complete end-to-end MLOps project built with FastAPI and MongoDB.
+    The <strong>Train Model</strong> button initiates the entire ML pipeline (data ingestion, training, evaluation),
+    and the <strong>Upload & Predict</strong> option lets you test the trained model by uploading your own network data as a CSV file.
+    <br><br>
+    🔗 <a href="https://github.com/ananthakr1shnan/netsecurity-mlops" target="_blank" style="color: #00ffaa; text-decoration: underline;">
+        View the complete project on GitHub
+    </a>
+</p>
+
+        </div>
+    </section>
+
+    <section class="actions" id="services">
+        <div class="container">
+            <h2>Available Options</h2>
+            <div class="action-grid">
+                <div class="action-card">
+                <span class="action-icon">🚀</span>
+                <h3>Train Model</h3>
+                <p>Initiate the machine learning pipeline to train the network security model with the latest data from the MongoDB collection.</p>
+                <button class="btn" onclick="trainModel(event)">Start Training</button>
+            </div>
+
+                
+                <div class="action-card" onclick="document.getElementById('fileInput').click()">
+                    <span class="action-icon">🔍</span>
+                    <h3>Predict Threats</h3>
+                    <p>Upload the CSV data file to get real-time predictions on potential network security threats and vulnerabilities.</p>
+                    <button class="btn btn-secondary">Upload & Predict</button>
+                </div>
+                
+                <div class="action-card" onclick="window.location.href='/docs'">
+                    <span class="action-icon">📚</span>
+                    <h3>API RESPONSE</h3>
+                    <p>Click this to view the detailed api responses</p>
+                    <button class="btn btn-secondary">View Docs</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="api-section" id="api">
+        <div class="container">
+            <h2>API Endpoints</h2>
+            
+            <div class="endpoint-card">
+                <div class="endpoint-header">
+                    <span class="method-badge method-get">GET</span>
+                    <span class="endpoint-path">/train</span>
+                </div>
+                <p>Triggers the complete training pipeline for the network security model. This process includes data ingestion, preprocessing, model training, and evaluation.</p>
+            </div>
+            
+            <div class="endpoint-card">
+                <div class="endpoint-header">
+                    <span class="method-badge method-post">POST</span>
+                    <span class="endpoint-path">/predict</span>
+                </div>
+                <p>Accepts CSV file uploads and returns predictions with confidence scores. The response includes a detailed HTML table with threat analysis results.</p>
+            </div>
+            
+            <div class="endpoint-card">
+                <div class="endpoint-header">
+                    <span class="method-badge method-get">GET</span>
+                    <span class="endpoint-path">/docs</span>
+                </div>
+                <p>Interactive API documentation powered by FastAPI and Swagger UI. Test endpoints directly from your browser.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="upload-section" id="upload">
+        <div class="container">
+            <h2>Quick Prediction Upload</h2>
+            <div class="upload-area">
+                <div class="upload-icon">📊</div>
+                <h3>Drop your CSV file here</h3>
+                <p>Upload network data for instant threat analysis</p>
+                <p>(Test data is available in Github)</p>
+                <form id="uploadForm" action="/predict" method="post" enctype="multipart/form-data">
+                    <input type="file" id="fileInput" name="file" accept=".csv" class="file-input" onchange="handleFileSelect(this)">
+                    <label for="fileInput" class="file-label">Choose File</label>
+                </form>
+                <div id="uploadStatus" style="margin-top: 20px; display: none;">
+                    <div class="loading"></div>
+                    <span>Processing your data...</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>Network Security ML. This is a complete MLOps project for learning and demonstration purposes.</p>
+            <p style="margin-top: 10px; opacity: 0.7;">Covers training automation, prediction API, and full-stack deployment using FastAPI, MongoDB, and AWS S3.</p>
+            <p style="margin-top: 15px;">
+            🔗 View the full source code on 
+            <a href="https://github.com/ananthakr1shnan/netsecurity-mlops" target="_blank" style="color: #00ffaa; text-decoration: underline;">
+                GitHub
+            </a>
+        </p>
+        </div>
+    </footer>
+
+
+    <script>
+        function handleFileSelect(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                if (file.type === 'text/csv' || file.name.endsWith('.csv')) {
+                    document.getElementById('uploadStatus').style.display = 'block';
+                    document.getElementById('uploadForm').submit();
+                } else {
+                    alert('Please select a valid CSV file.');
+                    input.value = '';
+                }
+            }
+        }
+
+        // Add some interactive animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.action-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.2}s`;
+                card.style.animation = 'fadeInUp 0.8s ease forwards';
+            });
+        });
+
+        // CSS for fadeInUp animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Train model function
+        async function trainModel(event) {
+        const btn = event.target;
+        const originalText = btn.textContent;
+
+        // Show loading spinner
+        btn.innerHTML = '<div class="loading"></div> Training...';
+        btn.disabled = true;
+
+        try {
+            const response = await fetch('/train', { method: 'GET' });
+            if (response.ok) {
+                btn.textContent = '✅ Training Complete';
+            } else {
+                btn.textContent = '❌ Training Failed';
+            }
+        } catch (error) {
+            btn.textContent = '❌ Error';
+        }
+
+        // Reset after 3 sec
+        setTimeout(() => {
+            btn.textContent = originalText;
+            btn.disabled = false;
+        }, 3000);
+    }
+    </script>
+</body>
+</html>

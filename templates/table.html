@@ -1,21 +1,67 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Data Table</title>
+    <meta charset="UTF-8">
+    <title>Threat Prediction Results</title>
     <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #2d1b69 100%);
+            color: white;
+            padding: 40px;
         }
+
+        h1 {
+            text-align: center;
+            color: #00ffaa;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: rgba(255, 255, 255, 0.03);
+            box-shadow: 0 0 10px rgba(0, 255, 170, 0.2);
+        }
+
         th, td {
-            border: 1px solid black;
-            padding: 8px;
+            border: 1px solid rgba(0, 255, 170, 0.2);
+            padding: 12px;
             text-align: left;
+        }
+
+        th {
+            background-color: #00ffaa;
+            color: #0f0f23;
+        }
+
+        tr:nth-child(even) {
+            background-color: rgba(0, 255, 170, 0.05);
+        }
+
+        .btn {
+            display: block;
+            width: fit-content;
+            margin: 30px auto;
+            padding: 12px 30px;
+            background: linear-gradient(45deg, #00ffaa, #00d4ff);
+            color: #0f0f23;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 255, 170, 0.3);
         }
     </style>
 </head>
 <body>
-    <h2>Predicted Data</h2>
+    <h1>🛡️ Threat Prediction Table</h1>
     {{ table | safe }}
+
+    <a class="btn" href="/">← Back to Home</a>
 </body>
 </html>
