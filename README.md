@@ -1,7 +1,7 @@
 # 🛡️ Network Security MLOps Project
 
-[![Build Status](https://github.com/ananthakr1shnan/netsecurity-mlops/workflows/CI%2FCD/badge.svg)](https://github.com/ananthakr1shnan/netsecurity-mlops/actions)
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Render-green)](https://net-sec.onrender.com)
+[![CI/CD Pipeline](https://github.com/ananthakr1shnan/netsecurity-mlops/actions/workflows/main.yml/badge.svg)](https://github.com/ananthakr1shnan/netsecurity-mlops/actions)
+
 
 A complete **End-to-End MLOps Project** for predicting phishing threats from network data, featuring automated machine learning pipelines, containerized deployment, and continuous integration/delivery.
 
@@ -20,10 +20,7 @@ A complete **End-to-End MLOps Project** for predicting phishing threats from net
 - [🔄 CI/CD Pipeline](#-cicd-pipeline)
 - [📁 Project Structure](#-project-structure)
 - [🛠️ Local Development](#️-local-development)
-- [📡 API Documentation](#-api-documentation)
-- [🧪 Testing](#-testing)
 - [📈 Monitoring & Logging](#-monitoring--logging)
-- [🤝 Contributing](#-contributing)
 
 ---
 
@@ -278,9 +275,7 @@ Track and compare model experiments:
 
 - 🌐 **Live Application**: [https://net-sec.onrender.com](https://net-sec.onrender.com)
 - 📊 **MLflow Dashboard**: [DagsHub Experiments](https://dagshub.com/ananthakr1shnan/netsecurity-mlops)
-- 🐳 **Docker Image**: [Docker Hub Repository](https://hub.docker.com/ananthakrishnank/netsecurity-mlops)
+- 🐳 **Docker Image**: [Docker Hub Repository](https://hub.docker.com/r/ananthakrishnank/net-sec)
 - 📋 **Project Board**: [GitHub Issues](https://github.com/ananthakr1shnan/netsecurity-mlops/issues)
-- 📖 **Documentation**: [GitHub Wiki](https://github.com/ananthakr1shnan/netsecurity-mlops/wiki)
-
 ---
 
