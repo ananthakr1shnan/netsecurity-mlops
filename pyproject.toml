@@ -26,7 +26,8 @@ dependencies = [
   "dagshub",
   "fastapi",
   "uvicorn",
-  "python-multipart"
+  "python-multipart",
+  "jinja2",
 ]
 
 [tool.setuptools]

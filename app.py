@@ -80,5 +80,5 @@ async def predict_route(request: Request,file:UploadFile=File(...)):
     
 
 if __name__ == "__main__":
-    app_run(app, host="localhost", port=8000)
-        
+    port = int(os.getenv("PORT", 8000))
+    app_run(app, host="0.0.0.0", port=port)
